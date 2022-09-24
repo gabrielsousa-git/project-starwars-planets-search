@@ -9,7 +9,11 @@ function Provider({ children }) {
   useEffect(() => {
     const getPlanets = async () => {
       const { results } = await fetchPlanetsAPI();
-      setPlanets(results);
+      const finalResults = results.map((planet) => {
+        delete planet.residents;
+        return planet;
+      });
+      setPlanets(finalResults);
     };
     getPlanets();
   }, []);
