@@ -13,6 +13,7 @@ function Table() {
     value: '0',
   });
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [deleteFilter, setDeleteFilter] = useState([]);
 
   useEffect(() => {
     setFilteredPlanets(planets);
@@ -45,6 +46,11 @@ function Table() {
       }
     });
     return bools.every((el) => el);
+  };
+
+  const handleDeleteFilter = (index) => {
+    setSelectedFilters(selectedFilters.filter((toDelete) => toDelete.index !== index));
+    setDeleteFilter(deleteFilter.filter((toDelete) => toDelete.index !== index));
   };
 
   const planetsHtmlItems = filteredPlanets.filter(handleNumericFilters)
@@ -137,7 +143,7 @@ function Table() {
 
       {
         selectedFilters.map((filter, index) => (
-          <div key={ index }>
+          <div key={ index } data-testid="filter">
             <span>
               { filter.column }
               { ' ' }
@@ -145,6 +151,12 @@ function Table() {
               { ' ' }
               { filter.value }
             </span>
+            <button
+              type="button"
+              onClick={ () => handleDeleteFilter(index.index) }
+            >
+              X
+            </button>
           </div>
         ))
       }
