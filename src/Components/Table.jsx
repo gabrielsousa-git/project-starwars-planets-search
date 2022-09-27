@@ -1,6 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import AppContext from '../context/AppContext';
 
+const COLUMNS = [
+  'population',
+  'orbital_period',
+  'diameter',
+  'rotation_period',
+  'surface_water',
+];
+
 function Table() {
   const { planets } = useContext(AppContext);
   const [filterByName, setFilterByName] = useState({
@@ -25,7 +33,6 @@ function Table() {
     const filtered = planets.filter((planet) => planet.name.toLowerCase()
       .includes(filter));
     setFilteredPlanets(filtered);
-    console.log(filtered);
   };
 
   const handleNumericFilters = (linha) => {
@@ -48,9 +55,14 @@ function Table() {
     return bools.every((el) => el);
   };
 
-  const handleDeleteFilter = (index) => {
-    setSelectedFilters(selectedFilters.filter((toDelete) => toDelete.index !== index));
-    setDeleteFilter(deleteFilter.filter((toDelete) => toDelete.index !== index));
+  const handleDeleteFilter = (column) => {
+    setSelectedFilters(selectedFilters.filter((toDelete) => toDelete.column !== column));
+    setDeleteFilter(deleteFilter.filter((toDelete) => toDelete.column !== column));
+  };
+
+  const deleteAllFilters = () => {
+    setFilterByName({ name: '' });
+    setSelectedFilters([]);
   };
 
   const planetsHtmlItems = filteredPlanets.filter(handleNumericFilters)
@@ -59,7 +71,7 @@ function Table() {
         { Object.values(planet).map((plnt, ind) => (<td key={ ind }>{ plnt }</td>)) }
       </tr>
     ));
-
+  console.log(selectedFilters);
   return (
     <main>
 
@@ -85,11 +97,12 @@ function Table() {
             (prevSelect) => ({ ...prevSelect, column: target.value }),
           ) }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          { COLUMNS.filter((column) => !selectedFilters.includes(column))
+            .map((column) => (
+              <option key={ column } value={ column }>
+                { column }
+              </option>
+            )) }
         </select>
       </label>
 
@@ -141,6 +154,14 @@ function Table() {
         Filtrar
       </button>
 
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ deleteAllFilters }
+      >
+        Remover todos os filtros
+      </button>
+
       {
         selectedFilters.map((filter, index) => (
           <div key={ index } data-testid="filter">
@@ -153,7 +174,7 @@ function Table() {
             </span>
             <button
               type="button"
-              onClick={ () => handleDeleteFilter(index.index) }
+              onClick={ () => handleDeleteFilter(filter.column) }
             >
               X
             </button>
