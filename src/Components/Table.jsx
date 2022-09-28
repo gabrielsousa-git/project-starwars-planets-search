@@ -71,7 +71,7 @@ function Table() {
         { Object.values(planet).map((plnt, ind) => (<td key={ ind }>{ plnt }</td>)) }
       </tr>
     ));
-  console.log(selectedFilters);
+
   return (
     <main>
 
@@ -93,8 +93,8 @@ function Table() {
           id="column-filter"
           data-testid="column-filter"
           value={ filterByNumericValues.column }
-          onChange={ ({ target }) => setFilterByNumericValues(
-            (prevSelect) => ({ ...prevSelect, column: target.value }),
+          onChange={ ({ target: { value } }) => setFilterByNumericValues(
+            (prevSelect) => ({ ...prevSelect, column: value }),
           ) }
         >
           { COLUMNS.filter((column) => !selectedFilters.includes(column))
@@ -112,8 +112,8 @@ function Table() {
           id="comparison-filter"
           data-testid="comparison-filter"
           value={ filterByNumericValues.comparison }
-          onChange={ ({ target }) => setFilterByNumericValues(
-            (prevSelect) => ({ ...prevSelect, comparison: target.value }),
+          onChange={ ({ target: { value } }) => setFilterByNumericValues(
+            (prevSelect) => ({ ...prevSelect, comparison: value }),
           ) }
         >
           <option value="maior que">maior que</option>
@@ -130,8 +130,8 @@ function Table() {
           id="value-filter"
           data-testid="value-filter"
           value={ filterByNumericValues.value }
-          onChange={ ({ target }) => setFilterByNumericValues(
-            (prevSelect) => ({ ...prevSelect, value: target.value }),
+          onChange={ ({ target: { value } }) => setFilterByNumericValues(
+            (prevSelect) => ({ ...prevSelect, value }),
           ) }
         />
       </label>
